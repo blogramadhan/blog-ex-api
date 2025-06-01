@@ -19,7 +19,8 @@ exports.register = async (req, res) => {
 exports.login = async (req, res) => {
     try {
         const { email, password } = req.body;
-        const user = await User.findOne({ where: { email } });
+        // Menggunakan scope 'withPassword' untuk mendapatkan password
+        const user = await User.scope('withPassword').findOne({ where: { email } });
 
         if (!user) {
             return res.status(400).json({ error: 'Email atau password salah' });    
