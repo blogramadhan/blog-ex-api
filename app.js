@@ -1,10 +1,13 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const cors = require('cors');
+
 const app = express();
 
 // Middleware
 // Untuk membaca input dari user
 app.use(bodyParser.json());
+app.use(cors());
 
 // Routes
 // Import routes yang sudah dibuat

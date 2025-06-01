@@ -1,15 +1,27 @@
 const Post = require('../models/Post');
 const User = require('../models/User');
+const { Op } = require('sequelize');
 
 // Get all posts
 exports.getPosts = async (req, res) => {
     try {
-        const posts = await Post.findAll({ include: User});
+        const posts = await Post.findAll({ include: User });
         return res.json({ data: posts});
     } catch (error) {
         return res.status(500).json({ error: error.message})
     }
 }
+
+exports.getPostsByUser = async (req, res) => {
+    try {
+        const posts = await Post.findAll({
+            where: { user_id: req.user.id },
+        });
+        return res.json({ data: posts });
+    } catch (error) {
+        return res.status(500).json({ error: error.message });
+    }
+};
 
 // Get post by id
 exports.getPostById = async (req, res) => {
@@ -71,3 +83,18 @@ exports.deletePost = async (req, res) => {
         return res.status(500).json({ error: error.message});
     }
 }
+
+exports.searchPost = async (req, res) => {
+    try {
+        const posts = await Post.findAll({
+            where: {
+                title: {
+                    [Op.like]: `%${req.params.keyword}%`,
+                },
+            },
+        });
+        return res.json({ data: posts });
+    } catch (error) {
+        return res.status(500).json({ error: error.message });
+    }
+};
